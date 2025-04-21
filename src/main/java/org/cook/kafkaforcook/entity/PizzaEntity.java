@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +20,5 @@ public class PizzaEntity {
     @Column(name = "name")
     private String name;
     @Column(name = "time")
-    private LocalDateTime time;
+    private LocalTime time;
 }

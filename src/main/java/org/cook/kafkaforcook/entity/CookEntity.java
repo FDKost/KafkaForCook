@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -21,7 +21,7 @@ public class CookEntity {
     @Column(name = "experience_coefficient")
     private float experienceCoefficient;
     @Column(name = "start_work_time")
-    private LocalDateTime startWorkTime;
+    private LocalTime startWorkTime;
     @Column(name = "end_work_time")
-    private LocalDateTime endWorkTime;
+    private LocalTime endWorkTime;
 }

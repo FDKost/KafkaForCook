@@ -10,7 +10,11 @@ import java.util.UUID;
 
 @Repository
 public interface OrdersForCookingRepository extends JpaRepository<OrdersForCookingEntity, UUID> {
-    Optional<OrdersForCookingEntity> findByOrderId(UUID orderId);
-    List<OrdersForCookingEntity> findAllByEmployeeId(UUID employeeId);
-    Optional<OrdersForCookingEntity> findByEmployeeId(UUID employeeId);
+    Optional<OrdersForCookingEntity> findByOrderNumber(UUID orderId);
+
+    Optional<OrdersForCookingEntity> findByEmployeeEmployeeNumber(UUID employeeId);
+
+    List<OrdersForCookingEntity> findAllByCartId(UUID cartId);
+
+    List<OrdersForCookingEntity> findAllByEmployeeEmployeeNumber(UUID employeeId);
 }

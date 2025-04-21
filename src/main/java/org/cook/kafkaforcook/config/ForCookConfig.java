@@ -8,6 +8,6 @@ import org.springframework.web.client.RestTemplate;
 public class ForCookConfig {
     @Bean
     RestTemplate restTemplate() {
-        return new RestTemplate(); //на будущее для handler'а
+        return new RestTemplate();
     }
 }

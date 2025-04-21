@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface CookRepository extends JpaRepository<CookEntity, UUID> {
-        Optional<CookEntity> findById(UUID id);
+    Optional<CookEntity> findById(UUID id);
 }
