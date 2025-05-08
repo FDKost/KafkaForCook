@@ -15,13 +15,13 @@ VALUES (001,'Cheese 4 u','0:05:00'),
        (011,'Fishing tale','0:09:00')
 ;
 INSERT INTO cook(employee_number, experience_coefficient, start_work_time, end_work_time)
-VALUES (uuid_generate_v4(),1.5,'12:00:00','20:00:00'),
-       (uuid_generate_v4(),1.3,'06:00:00','13:00:00'),
-       (uuid_generate_v4(),1.3,'07:00:00','15:00:00'),
-       (uuid_generate_v4(),1.4,'06:00:00','21:00:00'),
-       (uuid_generate_v4(),1.6,'06:00:00','22:00:00'),
-       (uuid_generate_v4(),1.4,'06:00:00','23:00:00'),
-       (uuid_generate_v4(),1.9,'06:00:00','23:00:00'),
-       (uuid_generate_v4(),1.8,'10:00:00','22:00:00')
+VALUES (uuid_generate_v4(),0.8,'12:00:00','20:00:00'),
+       (uuid_generate_v4(),0.5,'06:00:00','13:00:00'),
+       (uuid_generate_v4(),0.6,'07:00:00','15:00:00'),
+       (uuid_generate_v4(),0.8,'06:00:00','21:00:00'),
+       (uuid_generate_v4(),0.7,'06:00:00','22:00:00'),
+       (uuid_generate_v4(),0.7,'06:00:00','23:00:00'),
+       (uuid_generate_v4(),0.9,'06:00:00','23:00:00'),
+       (uuid_generate_v4(),1,'10:00:00','22:00:00')
 ;
 

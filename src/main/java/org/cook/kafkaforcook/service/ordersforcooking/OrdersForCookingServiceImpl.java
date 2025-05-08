@@ -50,7 +50,7 @@ public class OrdersForCookingServiceImpl implements OrdersForCookingService {
                 .ifPresent(ordersForCookingRepository::delete);
     }
 
-    private OrdersForCookingEntity mergeOrdersBeforeSend(OrdersForCookingEntity order) {
+    private void mergeOrdersBeforeSend(OrdersForCookingEntity order) {
         List<OrdersForCookingEntity> ordersForCookingEntities = ordersForCookingRepository.findAll();
         List<OrdersForCookingEntity> ordersToMerge = new ArrayList<>();
         OrdersForCookingEntity entityToSend = null;
@@ -74,10 +74,10 @@ public class OrdersForCookingServiceImpl implements OrdersForCookingService {
                 }
             }
             entityToSend.setEstimatedCompletionTime(latestTime);
-            return entityToSend;
+            //method to send
         } else {
             entityToSend = ordersToMerge.get(0);
-            return entityToSend;
+            //method to send
         }
     }
 
