@@ -6,7 +6,6 @@ import org.cook.kafkaforcook.dto.CookToProcessOrderDTO;
 import org.cook.kafkaforcook.entity.OrdersForCookingEntity;
 import org.cook.kafkaforcook.service.cook.CookService;
 import org.cook.kafkaforcook.service.ordersforcooking.OrdersForCookingService;
-import org.cook.kafkaforcook.service.pizza.PizzaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ public class EventHandlerServiceImpl implements EventHandlerService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final CookService cookService;
     private final OrdersForCookingService ordersForCookingService;
-    private final PizzaService pizzaService;
 
     @Override
     public void handleEvent(ProductCartKafkaDTO dto) {
