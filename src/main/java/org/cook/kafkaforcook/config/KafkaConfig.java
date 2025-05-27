@@ -1,16 +1,19 @@
 package org.cook.kafkaforcook.config;
 
 import by.cook.core.ProductCartKafkaDTO;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.cook.kafkaforcook.dto.OrderToSendDTO;
 import org.cook.kafkaforcook.exception.RetryableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
@@ -57,12 +60,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
+    KafkaTemplate<String, OrderToSendDTO> kafkaTemplate(ProducerFactory<String, OrderToSendDTO> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
     }
 
     @Bean
-    ProducerFactory<String, Object> producerFactory() {
+    ProducerFactory<String, OrderToSendDTO> producerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 env.getProperty("spring.kafka.consumer.bootstrap-servers"));
@@ -70,5 +73,14 @@ public class KafkaConfig {
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
         return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    NewTopic createTopic() {
+        return TopicBuilder.name("delivery-created-events-topic")
+                .partitions(3)
+                .replicas(3)
+                .configs(Map.of("min.insync.replicas", "1"))
+                .build();
     }
 }

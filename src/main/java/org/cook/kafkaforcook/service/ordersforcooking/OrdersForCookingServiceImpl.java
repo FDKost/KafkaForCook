@@ -2,9 +2,11 @@ package org.cook.kafkaforcook.service.ordersforcooking;
 
 import by.cook.core.ProductCartKafkaDTO;
 import lombok.RequiredArgsConstructor;
+import org.cook.kafkaforcook.dto.OrderToSendDTO;
 import org.cook.kafkaforcook.entity.CookEntity;
 import org.cook.kafkaforcook.entity.OrdersForCookingEntity;
 import org.cook.kafkaforcook.repository.OrdersForCookingRepository;
+import org.cook.kafkaforcook.service.delivery.SendProductsToDeliveryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.*;
 public class OrdersForCookingServiceImpl implements OrdersForCookingService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final OrdersForCookingRepository ordersForCookingRepository;
+    private final SendProductsToDeliveryService sendProductsToDelivery;
 
     @Override
     public OrdersForCookingEntity create(OrdersForCookingEntity ordersForCookingEntity) {
@@ -53,31 +56,29 @@ public class OrdersForCookingServiceImpl implements OrdersForCookingService {
     private void mergeOrdersBeforeSend(OrdersForCookingEntity order) {
         List<OrdersForCookingEntity> ordersForCookingEntities = ordersForCookingRepository.findAll();
         List<OrdersForCookingEntity> ordersToMerge = new ArrayList<>();
-        OrdersForCookingEntity entityToSend = null;
+        OrderToSendDTO sendDTO = new OrderToSendDTO();
         for (OrdersForCookingEntity ordersForCookingEntity : ordersForCookingEntities) {
             if (ordersForCookingEntity.getCartId().equals(order.getCartId())) {
                 ordersToMerge.add(ordersForCookingEntity);
             }
         }
         if (ordersToMerge.size() > 1) {
-            LocalTime latestTime = LocalTime.MIDNIGHT;
             for (OrdersForCookingEntity orderForMergePreparationEntity : ordersToMerge) {
-                if (entityToSend == null) {
-                    entityToSend = orderForMergePreparationEntity;
-                }
-                if (orderForMergePreparationEntity != entityToSend) {
-                    entityToSend.setPizzaList(entityToSend.getPizzaList() + ", "
+                if (sendDTO.getCartId() == null && sendDTO.getPizzaList().isEmpty()) {
+                    sendDTO.setCartId(orderForMergePreparationEntity.getCartId());
+                    sendDTO.setPizzaList(orderForMergePreparationEntity.getPizzaList());
+                } else {
+                    sendDTO.setPizzaList(sendDTO.getPizzaList() + ", "
                             + orderForMergePreparationEntity.getPizzaList());
-                    if (orderForMergePreparationEntity.getEstimatedCompletionTime().isAfter(latestTime)) {
-                        latestTime = orderForMergePreparationEntity.getEstimatedCompletionTime();
-                    }
                 }
             }
-            entityToSend.setEstimatedCompletionTime(latestTime);
-            //method to send
+
+            sendProductsToDelivery.sendProductsToDelivery(sendDTO);
         } else {
-            entityToSend = ordersToMerge.get(0);
-            //method to send
+            sendDTO.setCartId(order.getCartId());
+            sendDTO.setPizzaList(order.getPizzaList());
+
+            sendProductsToDelivery.sendProductsToDelivery(sendDTO);
         }
     }
 
@@ -110,7 +111,7 @@ public class OrdersForCookingServiceImpl implements OrdersForCookingService {
                 mergeOrdersBeforeSend(entry.getKey());
             }
             ordersForCookingRepository.deleteAll(ordersToDelete);
-            LOGGER.info("Orders merged and ready to send!");
+            LOGGER.info("Orders merged and sent!");
         } else {
             LOGGER.info("No orders have been completed!");
         }
